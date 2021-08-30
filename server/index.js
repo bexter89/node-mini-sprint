@@ -38,30 +38,31 @@ const handleRequest = function (req, res) {
 
   // TODO: GET ONE
   if ((req.url == '/quote/' || req.url == '/quote') && req.method == "GET") {
-    req.on('data', (data, error) => {
-      if (error) {
-        console.error(error)
-        res.end(error)
-      } else {
-        res.statusCode = 200;
-        res.end(data);
-      }
+    console.log('get request triggered!')
+    var randomIndex = getRandomInt(0, quotes.length)
+
+    req.on('data', (data) => {
+      res.writeHead(200)
     })
+    req.on('end', () => {
+      res.end(quotes[randomIndex]);
+    });
   }
+
   // TODO: POST/CREATE
   else if ((req.url == '/quote/' || req.url == '/quote') && req.method == "POST") {
 
     var data = '';
-    res.on('data', (chunkOfData) => {
+    req.on('data', (chunkOfData) => {
       data += chunkOfData.toString();
     })
-    res.on('end', () => {
+    req.on('end', () => {
       var quote = JSON.parse(data);
-      quotes.push(quote);
-      res.writeHead(201, {'Content-Type' : 'application.json'})
+      console.log('this is the data!', data);
+      quotes.push(quote.quote);
+      res.writeHead(201, {'Content-Type' : 'application/json'})
       res.end(JSON.stringify(quotes));
     });
-    res.end();
   }
 
   //CATCH ALL ROUTE
