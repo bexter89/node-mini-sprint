@@ -38,13 +38,15 @@ const handleRequest = function (req, res) {
 
   // TODO: GET ONE
   if ((req.url == '/quote/' || req.url == '/quote') && req.method == "GET") {
-    req.on('data', (data) => {
-      res.status(200).send(data)
+    req.on('data', (data, error) => {
+      if (error) {
+        console.error(error)
+        res.end(error)
+      } else {
+        res.statusCode = 200;
+        res.end(data);
+      }
     })
-    req.on('error', (error) => {
-      console.error(error);
-    });
-    req.end()
   }
   // TODO: POST/CREATE
   else if ((req.url == '/quote/' || req.url == '/quote') && req.method == "POST") {
@@ -59,7 +61,7 @@ const handleRequest = function (req, res) {
       res.writeHead(201, {'Content-Type' : 'application.json'})
       res.end(JSON.stringify(quotes));
     });
-    req.end();
+    res.end();
   }
 
   //CATCH ALL ROUTE
