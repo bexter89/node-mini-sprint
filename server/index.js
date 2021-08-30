@@ -12,11 +12,11 @@ const port = 3000;
 
 // TODO: Fill with strings of your favorite quotes :)
 const quotes = [
-  'one',
-  'two',
-  'three',
-  'four',
-  'five'
+  'dont cry for me argentinaaaaa!',
+  'it was a run-by fruiting! ',
+  'youre not gonna believe this, but its a one-wheeled haystack!',
+  'one does not simply walk into mordor',
+  'here we go, one more time, everybodys feeling fine!'
 ];
 
 //Utility Function to return a random integer
@@ -26,31 +26,46 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
 
-const handleRequest = function(req, res) {
+const handleRequest = function (req, res) {
   console.log(`Endpoint: ${req.url} Method: ${req.method}`);
 
   // redirect users to /quote if they try to hit the homepage. This should already work, no changes needed
   if (req.url == '/') {
     console.log('redirecting');
-    res.writeHead(301, {...headers, Location: `http://localhost:${port}/quote`}) //redirect to quote
+    res.writeHead(301, { ...headers, Location: `http://localhost:${port}/quote` }) //redirect to quote
     res.end();
   }
 
   // TODO: GET ONE
-  if ((req.url == '/quote/' || req.url == '/quote') && req.method == "FILL ME IN") {
-    //YOUR CODE HERE
-
+  if ((req.url == '/quote/' || req.url == '/quote') && req.method == "GET") {
+    req.on('data', (data) => {
+      res.status(200).send(data)
+    })
+    req.on('error', (error) => {
+      console.error(error);
+    });
+    req.end()
   }
   // TODO: POST/CREATE
-  else if ((req.url == 'FILL ME IN' || req.url == 'FILL ME IN') && req.method == "FILL ME IN") {
-    //YOUR CODE HERE
+  else if ((req.url == '/quote/' || req.url == '/quote') && req.method == "POST") {
+
+    var data = '';
+    res.on('data', (chunkOfData) => {
+      data += chunkOfData.toString();
+    })
+    res.on('end', () => {
+      var quote = JSON.parse(data);
+      quotes.push(quote);
+      res.writeHead(201, {'Content-Type' : 'application.json'})
+      res.end(JSON.stringify(quotes));
+    });
+    req.end();
   }
 
-//CATCH ALL ROUTE
+  //CATCH ALL ROUTE
   else {
-    res.writeHead(404,headers);
+    res.writeHead(404, headers);
     res.end('Page not found');
-
   }
 }
 
