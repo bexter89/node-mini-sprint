@@ -1,0 +1,12 @@
+DROP DATABASE IF EXISTS quotes;
+
+CREATE DATABASE quotes;
+
+USE quotes;
+
+CREATE TABLE random_quotes (
+  id INT NOT NULL AUTO_INCREMENT,
+  text VARCHAR(250),
+  PRIMARY KEY (id)
+);
+
