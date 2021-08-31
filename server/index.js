@@ -2,6 +2,9 @@ const http = require('http');
 const express = require('express');
 const app = express();
 const router = express.Router();
+const path = require('path');
+const axios = require('axios').default;
+
 
 //headers to allows CORS requests
 const headers = {
@@ -28,15 +31,17 @@ function getRandomInt(min, max) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
 }
-app.use(express.static(`http://localhost:${port}/index.html`));
+
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../react-client/dist/index.html')));
 
 
-app.get('/', (req, res)=> {
-  console.log('redirecting');
-  res.writeHead(301, { ...headers, Location: `http://localhost:${port}/quote` }) //redirect to quote
-  res.end();
-})
+// app.get('/', (req, res)=> {
+//   console.log('redirecting');
+//   res.writeHead(301, { ...headers, Location: `http://localhost:${port}/quote` }) //redirect to quote
+//   res.end();
+// })
+
 app.get('/quote', (req, res) => {
   var randomIndex = getRandomInt(0, quotes.length)
   res.status(200).send(quotes[randomIndex])
