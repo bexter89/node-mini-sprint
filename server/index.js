@@ -4,6 +4,7 @@ const app = express();
 const router = express.Router();
 const path = require('path');
 const axios = require('axios').default;
+const db = require ('../server/index.js')
 
 
 //headers to allows CORS requests

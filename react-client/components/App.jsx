@@ -17,6 +17,7 @@ export default class App extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getRandomInt = this.getRandomInt.bind(this);
+    this.handleUpdateQuote = this.handleUpdateQuote.bind(this);
   }
 
   componentDidMount() {
@@ -49,15 +50,29 @@ export default class App extends React.Component {
     )
   }
 
+  handleUpdateQuote(event) {
+    event.preventDefault();
+    this.setState({
+      currentQuote: this.state.quotes[this.getRandomInt(0, this.state.quotes.length)]
+    })
+  }
+
   render() {
     return (
       <div>
       <h1>Bekah's Random Quote Generator</h1>
       <span>Your random quote is:</span>
       <h2>{this.state.currentQuote}</h2>
-      <span>don't like this quote? add one of your own!</span>
+      <span>don't like this quote? try another quote!</span>
+      <form onSubmit={this.handleUpdateQuote}>
+        <label htmlFor="getNewQuote">
+        <input type="submit" value="get a new quote" />
+        </label>
+      </form>
+     <br/><br/>
+      <span>or, submit one of your own!</span>
       <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
-        <label htmlFor="addquote">
+        <label htmlFor="addQuote">
         <input type="text" name="addquote" value={this.state.newQuote} placeholder="add a new quote" />
         </label>
         <input type="submit" value="Submit!" />
