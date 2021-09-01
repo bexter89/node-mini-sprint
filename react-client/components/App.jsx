@@ -18,6 +18,8 @@ export default class App extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmitQuote = this.handleSubmitQuote.bind(this);
     this.handleUpdateQuote = this.handleUpdateQuote.bind(this);
+    this.handleEditQuote = this.handleEditQuote.bind(this);
+    this.handleDeleteQuote = this.handleDeleteQuote.bind(this);
   }
 
   componentDidMount() {
@@ -64,23 +66,66 @@ export default class App extends React.Component {
       })
     })
     .catch((error) => {
+      console.log('error!!! in handle update quote! ', error);
+    })
+  }
+
+  handleEditQuote(event) {
+    event.preventDefault();
+    axios.post('/editQuote')
+    .then((response)=> {
+      var quote = response.data[0]['text'];
+      this.setState({
+        currentQuote: quote,
+      })
+    })
+    .catch((error) => {
+      console.log('error!!! in hanlde update quote! ', error);
+    })
+  }
+
+  handleDeleteQuote(event) {
+    event.preventDefault();
+    axios.post('deleteQuote')
+    .then((response)=> {
+      var quote = response.data[0]['text'];
+      this.setState({
+        currentQuote: quote,
+      })
+    })
+    .catch((error) => {
       console.log('error!!! in hanlde update quote! ', error);
     })
   }
 
   render() {
     return (
-      <div>
+      <div id="quote">
       <h1>Bekah's Random Quote Generator</h1>
       <span>Your random quote is:</span>
       <h2>{this.state.currentQuote}</h2>
-      <span>don't like this quote? try another quote!</span>
+
       <form onSubmit={this.handleUpdateQuote}>
         <label htmlFor="getNewQuote">
         <input type="submit" value="get a new quote" />
         </label>
       </form>
      <br/><br/>
+     <span>don't like this quote?</span>
+      <form onSubmit={this.handleEditQuote}>
+        <label htmlFor="editQuote">
+        <input type="text" name="editquote"  placeholder="fix this quote" />
+        <input type="submit" value="make it better!" />
+        </label>
+      </form>
+      <br/>
+     <span> or, you can delete it.</span>
+      <form onSubmit={this.handleDeleteQuote}>
+        <label htmlFor="deleteQuote">
+        <input type="submit" value="delete quote" />
+        </label>
+      </form>
+      <br/><br/>
       <span>or, submit one of your own!</span>
       <form onSubmit={this.handleSubmitQuote} onChange={this.handleChange} value={this.state.newQuote}>
         <label htmlFor="addQuote">

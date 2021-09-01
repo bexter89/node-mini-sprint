@@ -48,8 +48,32 @@ addNewQuote = (quoteText, callback) => {
   })
 }
 
+editQuote = (quoteText, quoteIndex, callback) => {
+  var queryString = 'UPDATE random_quotes SET text = ?  WHERE id = ?';
+  dbConnection.query(queryString, [quoteText, quoteIndex], (err, data)=>{
+    if (err) {
+      console.log('there was an error updating this quote in the database! ', err);
+    } else {
+      callback(null, data);
+    }
+  })
+}
+
+deleteQuote = (index, callback) => {
+  var queryString = 'DELETE FROM random_quotes WHERE id = ?';
+  dbConnection.query(queryString, [index], (err, data)=>{
+    if (err) {
+      console.log('there was an error deleting this quote from the database! ', err);
+    } else {
+      callback(null, data);
+    }
+  })
+}
+
 
 module.exports.dbConnection = dbConnection;
 module.exports.getRandomQuote = getRandomQuote;
 module.exports.getMaxRows = getMaxRows;
 module.exports.addNewQuote = addNewQuote;
+module.exports.deleteQuote = deleteQuote;
+module.exports.editQuote = editQuote;
